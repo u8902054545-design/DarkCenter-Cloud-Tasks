@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задачи</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Установка шрифта Inter для всего документа */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;600&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Установка фона и цвета текста по требованию */
+            background-color: #0F0F0F;
+            color: white;
+            min-height: 100vh;
+        }
+        /* Увеличенный эффект нажатия для кнопок (Material Design "ripple") */
+        .card-button {
+            transition: transform 0.1s, box-shadow 0.1s, background-color 0.1s;
+        }
+        .card-button:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+            background-color: #1a1a1a;
+        }
+    </style>
+</head>
+<body class="antialiased pt-16">
+
+    <header class="fixed top-0 left-0 w-full h-16 flex items-center justify-start px-4 z-20 bg-[#0F0F0F] border-b border-gray-800">
+        
+        <button 
+            id="backButton"
+            class="z-10 p-2 rounded-full 
+                   text-gray-400 bg-transparent 
+                   hover:bg-gray-800 focus:outline-none 
+                   transition duration-150 ease-in-out"
+            aria-label="Назад"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-left">
+                <path d="m15 18-6-6 6-6"/>
+            </svg>
+        </button>
+
+        <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
+            <h1 class="text-white font-bold text-base select-none">
+                Задачи
+            </h1>
+        </div>
+        
+    </header>
+
+    <main class="p-4 pt-4">
+
+        <h2 class="text-lg font-semibold mb-4 text-gray-300">Облачный центр</h2>
+
+        <div class="space-y-4">
+            
+            <button 
+                class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+                onclick="console.log('Операция: Сборка');"
+            >
+                <div class="p-3 bg-blue-500 rounded-xl mr-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package text-white">
+                        <path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>
+                    </svg>
+                </div>
+                <span class="text-lg font-medium">Сборка</span>
+                <span class="ml-auto text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </span>
+            </button>
+
+            <button 
+                class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 transition duration-150 ease-in-out"
+                onclick="console.log('Операция: Приёмка');"
+            >
+                <div class="p-3 bg-green-500 rounded-xl mr-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-white">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.83-9.08"/><path d="m9 11 3 3L22 4"/>
+                    </svg>
+                </div>
+                <span class="text-lg font-medium">Приёмка</span>
+                <span class="ml-auto text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </span>
+            </button>
+
+            <button 
+                class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-150 ease-in-out"
+                onclick="console.log('Операция: Консолидация');"
+            >
+                <div class="p-3 bg-yellow-500 rounded-xl mr-4 flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers-3 text-white">
+                        <path d="m12 11.4 6 3.46V21L12 17.54 6 21V14.86Z"/><path d="m12 3.6 6 3.46V10.5L12 7.04 6 10.5V7.04Z"/><path d="m12 7.5 6 3.46V14.5L12 11.04 6 14.5V11.04Z"/>
+                    </svg>
+                </div>
+                <span class="text-lg font-medium">Консолидация</span>
+                <span class="ml-auto text-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right">
+                        <path d="m9 18 6-6-6-6"/>
+                    </svg>
+                </span>
+            </button>
+
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('backButton').onclick = function() {
+            console.log('Кнопка Назад нажата');
+        };
+
+        // --- ЛОГИКА ПОДКЛЮЧЕНИЯ К СЕРВЕРУ И ПРОВЕРКИ СТАТУСА ЧЕРЕЗ FETCH ---
+        
+        // !!! АКТУАЛЬНЫЙ URL ВАШЕГО РАЗВЕРНУТОГО WEBSCRIPT !!!
+        const APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzIQrTL0t3ajr94SucSOMTnYBwjnP0K_hlNx4Y3Gg3WcBkykNWbuMWZmEUy1bfudAWy/exec'; 
+        
+        const REDIRECT_URL = 'https://script.google.com/macros/s/AKfycbzUcNwWjmfMzZ-bR1Wkk6fb2qsh9qLzCp8OI9FJMjyTafuTOX-eUeDYGOSGcuzK6cW68w/exec';
+        const CHECK_INTERVAL = 3000; // 3000 миллисекунд = 3 секунды
+
+        /**
+         * Запускает запрос к серверу для проверки статуса через Fetch API.
+         */
+        async function startStatusCheck() {
+            try {
+                // Отправляем POST-запрос на URL развернутого скрипта
+                const response = await fetch(APP_SCRIPT_URL, {
+                    method: 'POST',
+                    // Важно: для POST-запроса с внешнего хостинга тело запроса 
+                    // должно быть отправлено.
+                    body: JSON.stringify({ action: 'checkStatus' }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const status = data.status;
+
+                console.log('Текущий статус смены:', status, '| Время ответа:', data.timestamp);
+
+                // Проверяем, если статус "Closed" (независимо от регистра и пробелов).
+                if (status && String(status).trim().toLowerCase() === 'closed') {
+                    console.warn('Смена ЗАКРЫТА. Перенаправление пользователя...');
+                    
+                    // Перенаправление
+                    window.location.href = REDIRECT_URL;
+                    
+                    // Очистка интервала, чтобы избежать повторных проверок во время редиректа
+                    clearInterval(statusCheckInterval);
+                } 
+                // Обработка возможной ошибки на стороне сервера
+                else if (status.startsWith('ERROR:')) {
+                    console.error('Ошибка сервера при проверке статуса:', status);
+                } else {
+                    console.log('Смена открыта. Продолжаем работу.');
+                }
+
+            } catch (error) {
+                console.error('Ошибка при выполнении Fetch-запроса:', error);
+            }
+        }
+
+        // 1. Запустить проверку сразу же при загрузке страницы
+        startStatusCheck();
+
+        // 2. Запустить циклическую проверку каждые 3 секунды
+        const statusCheckInterval = setInterval(startStatusCheck, CHECK_INTERVAL);
+
+    </script>
+
+</body>
+</html>
