@@ -43,18 +43,15 @@
             </svg>
         </button>
 
-        <div class="absolute inset-0 flex flex-col justify-center items-center pointer-events-none">
+        <div class="absolute inset-0 flex justify-center items-center pointer-events-none">
             <h1 class="text-white font-bold text-base select-none">
                 Задачи
             </h1>
-            <span id="shiftStatusIndicator" class="text-xs font-medium mt-1 text-yellow-500 select-none">
-                Инициализация...
-            </span>
         </div>
         
     </header>
 
-    <main id="mainContent" class="p-4 pt-4 hidden">
+    <main class="p-4 pt-4">
 
         <h2 class="text-lg font-semibold mb-4 text-gray-300">Облачный центр</h2>
 
@@ -115,95 +112,66 @@
     </main>
 
     <script>
-        // *** ВАШ URL GOOGLE APP SCRIPT ***
-        const APP_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx99QcxNY5UxYV_SsbPb7SOzDtUX1jVnXFEsYeFfFfzc_vgsRkWfwQXu-0uKVbKviKc/exec'; 
-        
-        // URL для перенаправления при закрытой смене
-        const REDIRECT_URL = 'https://u8902054545-design.github.io/DarkCenter-Cloud-User-Main/';
-        const CHECK_INTERVAL = 3000; // 3 секунды
-
-        const mainContent = document.getElementById('mainContent');
-        const statusIndicator = document.getElementById('shiftStatusIndicator');
-
-        /**
-         * Асинхронно вызывает развернутый API Apps Script через Fetch API.
-         */
-        async function checkShiftStatus() {
-            statusIndicator.textContent = 'Проверка статуса...';
-            statusIndicator.classList.remove('text-green-500', 'text-red-500');
-            statusIndicator.classList.add('text-yellow-500');
-
-            try {
-                // Отправляем запрос к App Script API
-                const response = await fetch(APP_SCRIPT_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                
-                handleStatusResponse(data.status);
-
-            } catch (error) {
-                console.error('Ошибка связи с App Script:', error);
-                statusIndicator.textContent = 'Ошибка связи. Повтор...';
-                statusIndicator.classList.remove('text-yellow-500', 'text-green-500');
-                statusIndicator.classList.add('text-red-500');
-                mainContent.classList.add('hidden');
-            }
-        }
-
-        /**
-         * Обрабатывает полученный статус.
-         * @param {string} rawStatus Статус смены.
-         */
-        function handleStatusResponse(rawStatus) {
-            const normalizedStatus = rawStatus.toUpperCase().trim();
-
-            if (normalizedStatus.startsWith('ERROR')) {
-                // Обработка ошибки, полученной от серверного скрипта
-                console.error('Ошибка на сервере:', rawStatus);
-                statusIndicator.textContent = 'Ошибка! См. консоль.';
-                statusIndicator.classList.remove('text-yellow-500', 'text-green-500');
-                statusIndicator.classList.add('text-red-500');
-                mainContent.classList.add('hidden');
-            }
-             else if (normalizedStatus === 'CLOSED') {
-                // Смена закрыта - перенаправляем
-                statusIndicator.textContent = 'Смена закрыта. Перенаправление...';
-                statusIndicator.classList.remove('text-green-500', 'text-yellow-500');
-                statusIndicator.classList.add('text-red-500');
-                mainContent.classList.add('hidden');
-                
-                console.log(`Смена закрыта. Перенаправление на: ${REDIRECT_URL}`);
-                // Используем replace для предотвращения возврата на страницу с ошибкой через кнопку "Назад"
-                window.location.replace(REDIRECT_URL); 
-                
-                clearInterval(statusCheckInterval); // Останавливаем проверку
-            } else {
-                // Смена открыта (любой другой статус, кроме "CLOSED" и ошибок)
-                statusIndicator.textContent = 'Смена открыта';
-                statusIndicator.classList.remove('text-yellow-500', 'text-red-500');
-                statusIndicator.classList.add('text-green-500');
-                mainContent.classList.remove('hidden'); // Показываем контент
-            }
-        }
-
-        // Запуск первой проверки сразу после загрузки страницы
-        checkShiftStatus();
-
-        // Настройка автоматической проверки каждые 3 секунды
-        const statusCheckInterval = setInterval(checkShiftStatus, CHECK_INTERVAL);
-
         // Привязка функции console.log к кнопке "Назад"
         document.getElementById('backButton').onclick = function() {
             console.log('Кнопка Назад нажата');
         };
 
-        // Очистка интервала при выгрузке страницы (хорошая практика)
-        window.onunload = function() {
-            clearInterval(statusCheckInterval);
-        };
+        // =========================================================
+        // КОД ДЛЯ ПОДКЛЮЧЕНИЯ К ВНЕШНЕМУ API (App Script)
+        // =========================================================
+
+        const REDIRECT_URL = 'https://u8902054545-design.github.io/DarkCenter-Cloud-User-Main/';
+        const CLOSED_STATUS = 'Closed';
+        const CHECK_INTERVAL = 3000; // 3000 мс = 3 секунды
+
+        // Ваш НОВЫЙ URL App Script API
+        const API_ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbx9sRZ-nNZ-Dk1gpa-UPY4-X-8NEFkzJF7JmoiCGlmNfyfugol5Cb1rMEtVSJJdu-4E/exec'; 
+
+        /**
+         * Проверяет статус смены через App Script API с помощью Fetch.
+         */
+        async function checkShiftStatusAndRedirect() {
+            try {
+                // Выполняем GET-запрос к вашему App Script API
+                const response = await fetch(API_ENDPOINT_URL, {
+                    method: 'GET',
+                    cache: 'no-cache' // Гарантируем получение свежих данных
+                });
+
+                if (!response.ok) {
+                    console.error('Ошибка сети или сервера (HTTP статус):', response.status, response.statusText);
+                    return;
+                }
+
+                const data = await response.json();
+                
+                // Получаем статус из ключа 'shift_status'
+                const currentStatus = data.shift_status ? data.shift_status.trim() : 'Unknown';
+
+                console.log('Получен статус смены:', currentStatus);
+
+                // Если статус "Closed", выполняем перенаправление
+                if (currentStatus === CLOSED_STATUS) {
+                    console.log('Смена закрыта. Перенаправление на:', REDIRECT_URL);
+                    window.location.replace(REDIRECT_URL); 
+                    
+                    // Очищаем интервал, чтобы остановить проверки после перенаправления
+                    clearInterval(statusCheckInterval);
+                }
+
+            } catch (error) {
+                console.error('Ошибка при обращении к API Google App Script:', error);
+            }
+        }
+
+        // Запускаем первую проверку немедленно
+        checkShiftStatusAndRedirect();
+
+        // Настраиваем автоматическую проверку каждые 3 секунды
+        const statusCheckInterval = setInterval(checkShiftStatusAndRedirect, CHECK_INTERVAL);
+
     </script>
 
 </body>
-</html>
+    </html>
