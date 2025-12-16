@@ -37,70 +37,82 @@
     <main class="p-4 pt-4">
         <h2 class="text-lg font-semibold mb-4 text-gray-300">Облачный центр</h2>
         <div class="space-y-4">
-            <button class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 active:bg-gray-900 rounded-2xl shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out" onclick="console.log('Операция: Сборка');">
-                <div class="p-3 bg-blue-500 rounded-xl mr-4 flex-shrink-0">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package text-white"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-                </div>
+            <button class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-lg" onclick="console.log('Сборка');">
+                <div class="p-3 bg-blue-500 rounded-xl mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-package text-white"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div>
                 <span class="text-lg font-medium">Сборка</span>
             </button>
-            </div>
+
+            <button class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-lg" onclick="console.log('Приёмка');">
+                <div class="p-3 bg-green-500 rounded-xl mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-circle text-white"><path d="M22 11.08V12a10 10 0 1 1-5.83-9.08"/><path d="m9 11 3 3L22 4"/></svg></div>
+                <span class="text-lg font-medium">Приёмка</span>
+            </button>
+
+            <button class="card-button w-full flex items-center p-4 bg-gray-800 hover:bg-gray-700 rounded-2xl shadow-lg" onclick="console.log('Консолидация');">
+                <div class="p-3 bg-yellow-500 rounded-xl mr-4"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layers-3 text-white"><path d="m12 11.4 6 3.46V21L12 17.54 6 21V14.86Z"/><path d="m12 3.6 6 3.46V10.5L12 7.04 6 10.5V7.04Z"/><path d="m12 7.5 6 3.46V14.5L12 11.04 6 14.5V11.04Z"/></svg></div>
+                <span class="text-lg font-medium">Консолидация</span>
+            </button>
+        </div>
     </main>
 
     <script>
-        document.getElementById('backButton').onclick = () => console.log('Кнопка Назад нажата');
+        document.getElementById('backButton').onclick = () => console.log('Назад');
 
-        // --- НАСТРОЙКИ ---
-        const API_ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbyx_8ltP4aewSKuYCbO5GTZtfF4hbRSr__0MG3bq8VAgr8PRF28Nqe22n5snSTwur5G/exec'; 
-        const REDIRECT_CLOSED_URL = 'https://u8902054545-design.github.io/DarkCenter-Cloud-User-Main/';
-        const REDIRECT_AUTH_URL = 'https://u8902054545-design.github.io/Auth-ITC-Platform/';
+        // Константы ссылок
+        const AUTH_URL = 'https://u8902054545-design.github.io/Auth-ITC-Platform/';
+        const CLOSED_REDIRECT_URL = 'https://u8902054545-design.github.io/DarkCenter-Cloud-User-Main/';
+        
+        const API_ENDPOINT_URL = 'https://script.google.com/macros/s/AKfycbwq698UMNuC6B4XeEA3ZBZcLbgSKs3BviKUBroscGDvXPnV8ZdSg1voVC346i2VVbk1/exec';
         const CHECK_INTERVAL = 3000;
 
         async function checkShiftStatusAndRedirect() {
+            // 1. Получаем Email из localStorage
             const userEmail = localStorage.getItem('userEmail');
 
-            // Если Email нет в хранилище - сразу на авторизацию
+            // Если Email вообще нет в хранилище — сразу на авторизацию
             if (!userEmail) {
-                console.warn('Email не найден в localStorage. Редирект...');
-                window.location.replace(REDIRECT_AUTH_URL);
+                console.warn('Email не найден в localStorage. Перенаправление...');
+                window.location.replace(AUTH_URL);
                 return;
             }
 
             try {
-                const response = await fetch(API_ENDPOINT_URL, {
-                    method: 'POST', // Используем POST для отправки данных
-                    mode: 'no-cors', // Позволяет отправить запрос в Google Script без ошибок CORS
-                    body: JSON.stringify({ userEmail: userEmail })
+                // 2. Отправляем запрос с Email в параметрах
+                const response = await fetch(`${API_ENDPOINT_URL}?email=${encodeURIComponent(userEmail)}`, {
+                    method: 'GET',
+                    cache: 'no-cache'
                 });
 
-                /* ВАЖНО: При mode: 'no-cors' мы не можем прочитать JSON ответ напрямую. 
-                   Поэтому для Google Apps Script лучше использовать стандартный fetch 
-                   без 'no-cors' (но тогда скрипт должен быть опубликован как Web App 
-                   с доступом "Anyone"). 
-                   
-                   Ниже приведен рабочий метод для получения данных из Google Script:
-                */
-                
-                const normalResponse = await fetch(API_ENDPOINT_URL + '?userEmail=' + encodeURIComponent(userEmail));
-                const data = await normalResponse.json();
-                
-                const currentStatus = data.shift_status;
-                console.log('Статус пользователя:', currentStatus);
+                if (!response.ok) throw new Error('Network response was not ok');
 
-                if (currentStatus === 'NotFound') {
-                    console.log('Пользователь не найден. Редирект на регистрацию...');
-                    window.location.replace(REDIRECT_AUTH_URL);
+                const data = await response.json();
+
+                // 3. Логика проверки ответа сервера
+                
+                // А) Email не найден в таблице (сервер вернул action: auth_redirect)
+                if (data.action === 'auth_redirect') {
+                    console.log('Пользователь не найден в базе. Редирект на Auth.');
+                    window.location.replace(AUTH_URL);
                     clearInterval(statusCheckInterval);
-                } else if (currentStatus === 'Closed') {
-                    console.log('Смена закрыта. Редирект...');
-                    window.location.replace(REDIRECT_CLOSED_URL); 
-                    clearInterval(statusCheckInterval);
+                    return;
                 }
+
+                // Б) Проверка статуса смены (Closed)
+                const currentStatus = data.shift_status ? data.shift_status.trim() : '';
+                if (currentStatus === 'Closed') {
+                    console.log('Смена закрыта. Редирект...');
+                    window.location.replace(CLOSED_REDIRECT_URL);
+                    clearInterval(statusCheckInterval);
+                    return;
+                }
+
+                console.log('Статус активен:', currentStatus);
 
             } catch (error) {
                 console.error('Ошибка связи с сервером:', error);
             }
         }
 
+        // Запуск цикла
         checkShiftStatusAndRedirect();
         const statusCheckInterval = setInterval(checkShiftStatusAndRedirect, CHECK_INTERVAL);
     </script>
