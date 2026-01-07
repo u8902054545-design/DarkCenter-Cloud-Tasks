@@ -23,6 +23,7 @@
             --md-sys-color-on-surface-variant: #CAC4D0;
             --md-sys-color-primary-container: #4F378B;
             --md-sys-color-on-primary-container: #EADDFF;
+            --md-sys-color-outline: #938F99;
         }
 
         body {
@@ -75,6 +76,39 @@
         img, svg, .material-symbols-rounded {
             pointer-events: none;
         }
+
+        /* Dialog Styling */
+        dialog {
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 0;
+            margin: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        dialog::backdrop {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        /* Dialog Animation */
+        dialog[open] {
+            animation: zoomIn 0.2s ease-out;
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body class="antialiased" oncontextmenu="return false;"> 
@@ -92,13 +126,14 @@
         <h2 class="text-sm font-medium text-[#CAC4D0] mb-4 ml-1 tracking-wide uppercase">DevOps Панель</h2>
         
         <div class="space-y-3">
-            <button class="md3-card w-full flex items-center p-4 shadow-sm" onclick="window.location.href='https://u8902054545-design.github.io/Tasks-Manager-Dev/'">
+            <!-- Кнопка Разработка с вызовом модального окна -->
+            <button class="md3-card w-full flex items-center p-4 shadow-sm" onclick="openDevModal()">
                 <div class="w-10 h-10 rounded-full bg-[#3F51B5] flex items-center justify-center text-white mr-4 shadow-inner">
                     <span class="material-symbols-rounded">terminal</span>
                 </div>
                 <div class="flex flex-col items-start">
                     <span class="text-lg font-normal text-[#E6E0E9]">Разработка</span>
-                    <span class="text-xs text-[#CAC4D0]">Написание и коммит кода</span>
+                    <span class="text-xs text-[#CAC4D0]">Выбор среды окружения</span>
                 </div>
             </button>
 
@@ -124,7 +159,65 @@
         </div>
     </main>
 
+    <!-- MD3 Modal (Dialog) -->
+    <dialog id="devDialog" class="rounded-[28px] shadow-2xl">
+        <div class="bg-[#2B2930] p-6 w-[85vw] max-w-[320px] flex flex-col">
+            <!-- Icon -->
+            <div class="mb-4 text-[#CAC4D0]">
+                <span class="material-symbols-rounded text-[24px]">dns</span>
+            </div>
+            
+            <!-- Headline -->
+            <h3 class="text-[#E6E0E9] text-2xl font-normal mb-2">Среда</h3>
+            
+            <!-- Supporting Text -->
+            <p class="text-[#CAC4D0] text-sm mb-6">Выберите точку входа для начала работы.</p>
+            
+            <!-- Actions Container -->
+            <div class="flex flex-col gap-3">
+                <!-- Action 1: Deploy The Abyss -->
+                <button onclick="window.location.href='https://u8902054545-design.github.io/Tasks-Manager-Dev/'" 
+                        class="h-10 rounded-full bg-[#4F378B] text-[#EADDFF] font-medium text-sm px-6 hover:bg-[#604b9a] active:bg-[#6f5da6] transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-rounded text-[18px]">deployed_code</span>
+                    Deploy The Abyss
+                </button>
+
+                <!-- Action 2: The Upside Down (Disabled) -->
+                <button disabled 
+                        class="h-10 rounded-full border border-[#938F99] text-[#E6E0E9] font-medium text-sm px-6 opacity-40 cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden">
+                    <span class="material-symbols-rounded text-[18px]">terminal</span>
+                    The Upside Down
+                    <!-- Strikethrough line for stylistic emphasis if needed, purely optional -->
+                </button>
+                
+                <!-- Cancel -->
+                 <button onclick="closeDevModal()" class="mt-2 text-[#EADDFF] text-sm font-medium h-10 hover:bg-[#ffffff10] rounded-full transition-colors">
+                    Отмена
+                </button>
+            </div>
+        </div>
+    </dialog>
+
     <script>
+        // Modal Logic
+        const devDialog = document.getElementById('devDialog');
+
+        function openDevModal() {
+            devDialog.showModal();
+        }
+
+        function closeDevModal() {
+            devDialog.close();
+        }
+
+        // Close on backdrop click
+        devDialog.addEventListener('click', (event) => {
+            if (event.target === devDialog) {
+                devDialog.close();
+            }
+        });
+
+        // Original Logic
         const BACK_LINK_URL = 'https://u8902054545-design.github.io/DarkCenter-Cloud-User-Main/';
 
         document.getElementById('backButton').onclick = () => {
@@ -148,6 +241,8 @@
         async function checkShiftStatusAndRedirect() {
             const userEmail = localStorage.getItem('userEmail');
 
+            // For testing purposes in sandbox environments, we might want to bypass redirect if email is missing
+            // But keeping strict logic as requested:
             if (!userEmail) {
                 console.warn('Email не найден в localStorage. Перенаправление...');
                 window.location.replace(AUTH_URL);
